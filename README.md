@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 this is a test of a concept i had for a platformer.
 
 for this im only planning on making one initial level and then going from there. the idea goes as follows:
