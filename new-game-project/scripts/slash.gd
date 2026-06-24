@@ -1,26 +1,25 @@
 extends Area2D
-# This is a generic fireball that anyhting can shoot out
 var damage = 0
 var hit = false
-var direction = 1 # 1 for right, -1 for left
+var direction = -1 # 1 for right, -1 for left
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	scale.x = direction
+	$AnimatedSprite2D.play("default")
+	
 
 
 func _on_body_entered(body: Node2D) -> void:
-	if hit == true:
-		$AnimatedSprite2D.play("boom")
-		$AnimatedSprite2D.scale = Vector2(10.0,10.0)
-		await $AnimatedSprite2D.animation_finished
-		return
 	if body.has_method("TakeDamage"):
 		hit = true
 		body.TakeDamage(int(damage))
 	# Deal damage to enemies here if needed
 
-	queue_free()
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+
+
+func _on_animated_sprite_2d_animation_finished() -> void:
+	queue_free()
+	pass # Replace with function body.

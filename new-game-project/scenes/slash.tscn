@@ -141,7 +141,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"default",
-"speed": 20.0
+"speed": 120.0
 }]
 
 [node name="Area2D" type="Area2D" unique_id=2059310028]
@@ -158,3 +158,6 @@ sprite_frames = SubResource("SpriteFrames_kdsls")
 frame = 18
 frame_progress = 1.0
 flip_h = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]

@@ -80,13 +80,16 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("attack") and is_on_floor():
+	#if event.is_action_pressed("attack") and is_on_floor():
+	if event.is_action_pressed("attack"):
 		isAttacking = true
 		$AnimatedSprite2D.play("attack1")
 
 	
 func _on_animated_sprite_2d_animation_finished() -> void:
 	#checks to see if the attack animation is done, and then resets the boolean
+	if isDead:
+		return 
 	if isAttacking:
 		isAttacking = false
 		
@@ -121,10 +124,11 @@ func TakeDamage(damage_taken):
 	
 func Die():
 	isDead = true
+	var tree = get_tree()
 	$AnimatedSprite2D.play("die")
 	await $AnimatedSprite2D.animation_finished
-	if is_instance_valid(self):
-		get_tree().reload_current_scene()
+	#if is_instance_valid(self):
+	tree.reload_current_scene()
 
 
 func _on_animated_sprite_2d_animation_changed() -> void:

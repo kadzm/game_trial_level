@@ -1,19 +1,19 @@
 using Godot;
 using System;
 
-namespace _Enemy{
+namespace _FlyingEnemy{
 
-public partial class Enemy : CharacterBody2D
+public partial class FlyingEnemy : CharacterBody2D
 {
+	[Export] public Marker2D[] PatrolPoints;
+	private int _currentPatrol = 0;
+	
 	public const float Speed = 200.0f;
-	public const float JumpVelocity = -400.0f;
+	public const float AttackSpeed = 275.0f;
 	public float _direction = 1.0f;
-	public bool hasSpawned = false;
-	private AnimatedSprite2D _animatedSprite;
 	public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
-	private static readonly PackedScene SlashScene = GD.Load<PackedScene>("res://scenes/slash.tscn");
-	private float spawnOffset = 60.0f;
-	private int Health = 100;
+	private AnimatedSprite2D _animatedSprite;
+	private int Health = 50;
 	private bool isDead = false;
 	private CharacterBody2D player;
 	private bool attack = false;
@@ -23,6 +23,8 @@ public partial class Enemy : CharacterBody2D
 		_animatedSprite = GetNodeOrNull<AnimatedSprite2D>("Hurtbox/Sprite");
 		GetNode<Area2D>("Hurtbox/Area2D").BodyEntered += _OnBodyEntered;
 		player = GetTree().GetFirstNodeInGroup("player") as CharacterBody2D;
+		
+		AddCollisionExceptionWith(player); // passes through player physically
 	}
 	//public override void _Process(double delta)
 	//{
@@ -31,46 +33,34 @@ public partial class Enemy : CharacterBody2D
 	public override void _PhysicsProcess(double delta)
 	{
 		bool flip = player.GlobalPosition.X < GlobalPosition.X;
-		if(isDead) return;
 		Vector2 velocity = Velocity;
-		float dist = GlobalPosition.DistanceTo(player.GlobalPosition);
-		//if (player == null) return;
-		
-		velocity.X = _direction*Speed;
-		if(!IsOnFloor())
-		{
-			velocity.Y += gravity * (float)delta;
-		}
-		else
-		{
+		if(isDead){
+			velocity.X = 0;
 			velocity.Y = 0;
-		}
+			return;
+		} 
+		float dist = GlobalPosition.DistanceTo(player.GlobalPosition);
 		if(IsOnWall())
 		{
 			_direction *= -1.0f;
 			velocity.X = _direction * Speed;
 		}
-		if(!attack)
-		_animatedSprite.FlipH = _direction < 0;
-		
-		if(isDead) //makes the enemy stand still when dying
+		if (!attack)
 		{
-			velocity.X = 0;
-			velocity.Y = 0;
-		} 
+		var target = PatrolPoints[_currentPatrol].GlobalPosition;
+		var direction = (target - GlobalPosition).Normalized();
+		velocity = direction * Speed;
+		_animatedSprite.FlipH = direction.X < 0;
+			if (GlobalPosition.DistanceTo(target) < 10.0f)
+			{
+				_currentPatrol = (_currentPatrol + 1) % PatrolPoints.Length;
+			}
+		}
+
 		if (dist < 400.0f)
 		{
-
-			Vector2 direction = (player.GlobalPosition - GlobalPosition).Normalized();
-			velocity = direction * Speed;
-			velocity.Y = 0;
-			attack = false;
-			if (dist < 140.0f)
-			{
-				attack = true;
-				velocity.X = 0;
-				Velocity = velocity;
-			}
+			GD.Print("Dist:", dist);
+			attack = true;
 		}
 		else{
 			attack = false;
@@ -78,24 +68,14 @@ public partial class Enemy : CharacterBody2D
 		if(attack)
 		{
 			Vector2 direction = (player.GlobalPosition - GlobalPosition).Normalized();
-			velocity = direction * Speed;
-			velocity.Y = 0; //remove this to get a flying enemy lol
-			velocity.X = 0;
-			if(!hasSpawned){
+			velocity = direction * AttackSpeed;
 			_animatedSprite.Play("attack");
 			_animatedSprite.FlipH = flip;
-			if (_animatedSprite.Frame >= 3)
-			{
-			hasSpawned = true;
-			SpawnSlash();
-			}
 			ToSignal(_animatedSprite, "animation_finished");
 			
-			}
 		}
 		if (!attack){ 
 			_animatedSprite.Play("walk");
-			hasSpawned = false;
 			ToSignal(_animatedSprite, "animation_finished");
 		}
 		Velocity = velocity;
@@ -111,27 +91,6 @@ public partial class Enemy : CharacterBody2D
 			Die();
 		}
 	}
-	public void SpawnSlash()
-	{
-		
-		var slash = SlashScene.Instantiate();
-		var SlashNode = slash as Node2D;
-		SlashNode.Set("damage", 1);
-		
-		if (_animatedSprite.FlipH)
-		{
-			SlashNode.Set("direction", -1.0f);
-			SlashNode.GlobalPosition = GlobalPosition + new Vector2(-spawnOffset, -10);
-		}
-		else
-		{
-			SlashNode.Set("direction", 1.0f);
-			SlashNode.GlobalPosition = GlobalPosition + new Vector2(spawnOffset, -10);
-		}
-		GetParent().AddChild(slash);
-		hasSpawned = false;
-	}
-	
 	public async void Die(){
 		isDead = true;
 		var collisionShape = GetNodeOrNull<CollisionShape2D>("Hurtbox");
@@ -146,6 +105,7 @@ public partial class Enemy : CharacterBody2D
 		if (body.HasMethod("TakeDamage") && body.IsInGroup("player"))
 	{
 		body.Call("TakeDamage", 30);
+		
 	}
 	}
 }
