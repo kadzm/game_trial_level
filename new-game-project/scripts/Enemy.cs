@@ -62,6 +62,7 @@ public partial class Enemy : CharacterBody2D
 		{
 
 			Vector2 direction = (player.GlobalPosition - GlobalPosition).Normalized();
+			_animatedSprite.FlipH = flip;
 			velocity = direction * Speed;
 			velocity.Y = 0;
 			attack = false;
