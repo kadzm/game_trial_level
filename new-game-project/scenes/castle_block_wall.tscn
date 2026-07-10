@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://c1nm6rmfchfvv"]
+
+[ext_resource type="Texture2D" uid="uid://w8xa6ncfclhf" path="res://sprites/castle_block_wall.png" id="1_c1lok"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h7t0m"]
+size = Vector2(79.875, 80.25)
+
+[node name="Node2D" type="Node2D" unique_id=1754126697]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=439203111]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=673221175]
+shape = SubResource("RectangleShape2D_h7t0m")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D" unique_id=621648223]
+position = Vector2(-7.6293945e-06, 1.1920929e-06)
+rotation = -3.1415927
+scale = Vector2(3.3323042, 3.3333333)
+texture = ExtResource("1_c1lok")

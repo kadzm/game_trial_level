@@ -1,19 +1,20 @@
 using Godot;
 using System;
 
-namespace _Enemy{
+namespace _Boss{
 
-public partial class Enemy : CharacterBody2D
+public partial class Boss : CharacterBody2D
 {
 	public const float Speed = 200.0f;
 	public const float JumpVelocity = -400.0f;
 	public float _direction = 1.0f;
 	public bool hasSpawned = false;
+	private bool jump = false;
 	private AnimatedSprite2D _animatedSprite;
 	public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
 	private static readonly PackedScene SlashScene = GD.Load<PackedScene>("res://scenes/slash.tscn");
-	private float spawnOffset = 60.0f;
-	private int Health = 100;
+	private float spawnOffset = 120.0f;
+	private int Health = 600;
 	private bool isDead = false;
 	private CharacterBody2D player;
 	private bool attack = false;
@@ -35,7 +36,7 @@ public partial class Enemy : CharacterBody2D
 		Vector2 velocity = Velocity;
 		float dist = GlobalPosition.DistanceTo(player.GlobalPosition);
 		//if (player == null) return;
-		
+		GD.Print(velocity.Y);
 		velocity.X = _direction*Speed;
 		if(!IsOnFloor())
 		{
@@ -58,15 +59,17 @@ public partial class Enemy : CharacterBody2D
 			velocity.X = 0;
 			velocity.Y = 0;
 		} 
-		if (dist < 400.0f)
+		if (dist < 800.0f)
 		{
 
 			Vector2 direction = (player.GlobalPosition - GlobalPosition).Normalized();
 			_animatedSprite.FlipH = flip;
 			velocity = direction * Speed;
-			velocity.Y = 0;
+			if(IsOnFloor()){
+				velocity.Y = 0;
+			}
 			attack = false;
-			if (dist < 140.0f)
+			if (dist < 220.0f)
 			{
 				attack = true;
 				velocity.X = 0;
@@ -80,10 +83,14 @@ public partial class Enemy : CharacterBody2D
 		{
 			Vector2 direction = (player.GlobalPosition - GlobalPosition).Normalized();
 			velocity = direction * Speed;
-			velocity.Y = 0; //remove this to get a flying enemy lol
+			//velocity.Y = 0; //remove this to get a flying enemy lol
+			if(IsOnFloor()){
+				velocity.Y=0;
+			}
 			velocity.X = 0;
 			if(!hasSpawned){
 			_animatedSprite.Play("attack");
+			_animatedSprite.Offset = new Vector2(15, 0);
 			_animatedSprite.FlipH = flip;
 			if (_animatedSprite.Frame >= 3)
 			{
@@ -96,8 +103,14 @@ public partial class Enemy : CharacterBody2D
 		}
 		if (!attack){ 
 			_animatedSprite.Play("walk");
+			_animatedSprite.Offset = new Vector2(0, 0);
 			hasSpawned = false;
 			ToSignal(_animatedSprite, "animation_finished");
+		}
+		if(jump)
+		{
+			velocity.Y = JumpVelocity * 2;
+			jump = false;
 		}
 		Velocity = velocity;
 		MoveAndSlide();
@@ -107,6 +120,11 @@ public partial class Enemy : CharacterBody2D
 	public void TakeDamage(int Damage)
 	{
 		Health = Health-Damage;
+		if (Damage == 0)
+		{
+			jump = true;
+			GD.Print("here");
+		}
 		if (Health <= 0)
 		{
 			Die();
@@ -118,6 +136,7 @@ public partial class Enemy : CharacterBody2D
 		var slash = SlashScene.Instantiate();
 		var SlashNode = slash as Node2D;
 		SlashNode.Set("damage", 1);
+		SlashNode.Scale = new Vector2(15.0f,-3.0f);
 		
 		if (_animatedSprite.FlipH)
 		{

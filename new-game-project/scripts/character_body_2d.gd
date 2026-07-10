@@ -6,6 +6,7 @@ const SPRINT_SPEED = 600
 const JUMP_VELOCITY = -600.0
 var isAttacking = false
 var isDead = false
+var hasKey = false
 const PROJECTILE_SCENE = preload("res://scenes/projectile.tscn")
 var spawn_offset = 50.0
 signal health_changed(health)
@@ -16,7 +17,17 @@ var health = 100 :
 		health_changed.emit(health)
 
 
+
+func _ready() -> void:
+	var spawn = get_tree().current_scene.get_node_or_null(Global.spawn_point)
+	if spawn:
+		global_position = spawn.global_position
+
+
 func _physics_process(delta: float) -> void:
+	
+	if (health > 100):
+		health = 100
 	
 	var current_speed = SPEED
 	
@@ -116,8 +127,11 @@ func spawn_projectile() -> void:
 	get_parent().add_child(projectile)
 	
 func TakeDamage(damage_taken):
+	#I'm gonna define each amount of damage as a different jump height. 
 	health -= damage_taken
-	velocity.y = JUMP_VELOCITY/1.5
+	#velocity.y = JUMP_VELOCITY/1.5
+	if damage_taken:
+		velocity.y = JUMP_VELOCITY*.8
 	if health <= 0:
 		Die()
 		
@@ -129,7 +143,12 @@ func Die():
 	await $AnimatedSprite2D.animation_finished
 	#if is_instance_valid(self):
 	tree.reload_current_scene()
-
+	
+func Check_Key():
+	return hasKey
+	
+func Acquire_Key():
+	hasKey = true
 
 func _on_animated_sprite_2d_animation_changed() -> void:
 	pass # Replace with function body.

@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://dnxo2n5ifcsnq"]
+
+[ext_resource type="Texture2D" uid="uid://mf8mi31nhfys" path="res://sprites/castle_block_background.png" id="1_di25a"]
+
+[node name="Node2D" type="Node2D" unique_id=1754126697]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1833774795]
+scale = Vector2(3.3333335, 3.3333335)
+texture = ExtResource("1_di25a")

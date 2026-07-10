@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://bombwbmtka2eq"]
+
+[ext_resource type="Script" uid="uid://bhyndkrs5ygm" path="res://scripts/Spikes5.cs" id="1_vci65"]
+[ext_resource type="Texture2D" uid="uid://cmn8008p25nnw" path="res://sprites/spikes.png" id="2_33uqu"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kd5gq"]
+size = Vector2(79, 61.0625)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0vi4p"]
+size = Vector2(82, 64)
+
+[node name="spikes" type="Node2D" unique_id=2145379254]
+script = ExtResource("1_vci65")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=304804832]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1767523187]
+position = Vector2(0, 16)
+shape = SubResource("RectangleShape2D_kd5gq")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D" unique_id=1279327059]
+position = Vector2(-5.421011e-20, 22.000002)
+scale = Vector2(5.1036515, 4.781756)
+texture = ExtResource("2_33uqu")
+
+[node name="Area2D" type="Area2D" parent="StaticBody2D" unique_id=975949036]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D/Area2D" unique_id=353397888]
+position = Vector2(0, 16)
+shape = SubResource("RectangleShape2D_0vi4p")
+debug_color = Color(0.93572927, 0.23336354, 0.2691435, 0.41960785)
+
+[connection signal="body_entered" from="StaticBody2D/Area2D" to="." method="_OnBodyEntered"]
