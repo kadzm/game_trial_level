@@ -11,10 +11,14 @@ config_version=5
 [application]
 
 config/name="New Game Project"
-run/main_scene="uid://bupmeu2asmy4p"
+run/main_scene="uid://dqxkfplx4j1h1"
 config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 run/max_fps=60
 config/icon="res://sprites/icon.svg"
+
+[autoload]
+
+Global="*uid://rongqfsuqso1"
 
 [dotnet]
 

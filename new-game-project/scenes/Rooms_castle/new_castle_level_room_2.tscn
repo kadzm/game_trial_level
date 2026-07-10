@@ -1,0 +1,40 @@
+[gd_scene format=4 uid="uid://dm6x5imvx12qr"]
+
+[ext_resource type="Script" uid="uid://0o0j2dqycvhx" path="res://scripts/Overlay.cs" id="1_1slft"]
+[ext_resource type="PackedScene" uid="uid://r43rb763ski" path="res://scenes/castle_block_path.tscn" id="1_71rer"]
+[ext_resource type="PackedScene" uid="uid://c1nm6rmfchfvv" path="res://scenes/castle_block_wall.tscn" id="2_se0i8"]
+[ext_resource type="PackedScene" uid="uid://yu4gbjvruiq6" path="res://scenes/spikes.tscn" id="3_knsvj"]
+[ext_resource type="PackedScene" uid="uid://bytfd30lb6ybm" path="res://scenes/camera.tscn" id="4_1slft"]
+[ext_resource type="PackedScene" uid="uid://be8qbmt0fe144" path="res://scenes/player.tscn" id="5_se0i8"]
+
+[sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_hs441"]
+scenes/1/scene = ExtResource("1_71rer")
+scenes/2/scene = ExtResource("2_se0i8")
+scenes/3/scene = ExtResource("3_knsvj")
+
+[sub_resource type="TileSet" id="TileSet_swfth"]
+sources/0 = SubResource("TileSetScenesCollectionSource_hs441")
+
+[node name="NewCastleLevelRoom2" type="Node2D" unique_id=1505395246]
+
+[node name="Overlay" type="CanvasLayer" parent="." unique_id=403524652]
+script = ExtResource("1_1slft")
+
+[node name="ProgressBar" type="ProgressBar" parent="Overlay" unique_id=1716922621]
+offset_left = 11.0
+offset_top = 10.0
+offset_right = 211.0
+offset_bottom = 37.0
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=56146302]
+tile_map_data = PackedByteArray("AAAAAAoAAAAAAAAAAgAKAAAAAAAAAAAAAgAPAAAAAAAAAAAAAgAUAAAAAAAAAAAAAgAFAAUAAAAAAAAAAgAFAAoAAAAAAAAAAgAKAAUAAAAAAAAAAgAAAA8AAAAAAAAAAgAAABQAAAAAAAAAAgAAABkAAAAAAAAAAgAAAB4AAAAAAAAAAgAjAAAAAAAAAAAAAgAoAAAAAAAAAAAAAgAtAAAAAAAAAAAAAgAtAAUAAAAAAAAAAgAyAAUAAAAAAAAAAgAyAAoAAAAAAAAAAgA3AAoAAAAAAAAAAgA3AA8AAAAAAAAAAgA3ABQAAAAAAAAAAgA3ABkAAAAAAAAAAgA3AB4AAAAAAAAAAgAZACMAAAAAAAAAAQAeACMAAAAAAAAAAQAUAPv/AAAAAAAAAgAjAPv/AAAAAAAAAgAjAPb/AAAAAAAAAgAUAPb/AAAAAAAAAgAjAPH/AAAAAAAAAgAUAPH/AAAAAAAAAgAUAOz/AAAAAAAAAgAjAOz/AAAAAAAAAgAjAOf/AAAAAAAAAgAUAOf/AAAAAAAAAgAUAOL/AAAAAAAAAgAjAOL/AAAAAAAAAgAjAN3/AAAAAAAAAgAUAN3/AAAAAAAAAgAUANj/AAAAAAAAAgAjANj/AAAAAAAAAgAAACMAAAAAAAAAAgAAACgAAAAAAAAAAgAAAC0AAAAAAAAAAgAAADIAAAAAAAAAAgA3ACMAAAAAAAAAAgA3ACgAAAAAAAAAAgA3AC0AAAAAAAAAAgA3ADIAAAAAAAAAAgAeACgAAAAAAAAAAgAZACgAAAAAAAAAAgAZAC0AAAAAAAAAAgAeAC0AAAAAAAAAAgAAADcAAAAAAAAAAgAAADwAAAAAAAAAAgA3ADcAAAAAAAAAAgA3ADwAAAAAAAAAAgA3AEEAAAAAAAAAAgAyAEEAAAAAAAAAAQAtAEEAAAAAAAAAAQAAAEEAAAAAAAAAAgAFAEEAAAAAAAAAAQAKAEEAAAAAAAAAAQAtAFUAAAAAAAAAAQAyAFUAAAAAAAAAAQAoAFUAAAAAAAAAAQAjAFUAAAAAAAAAAQAeAFUAAAAAAAAAAQAZAFUAAAAAAAAAAQAUAFUAAAAAAAAAAQAPAFUAAAAAAAAAAQAKAFUAAAAAAAAAAQAFAFUAAAAAAAAAAQAAAFUAAAAAAAAAAQA3AFUAAAAAAAAAAQA8AFUAAAAAAAAAAQBBAFUAAAAAAAAAAQBGAFUAAAAAAAAAAQBLAFUAAAAAAAAAAQBQAFUAAAAAAAAAAQBVAFUAAAAAAAAAAQD7/1UAAAAAAAAAAQD2/1UAAAAAAAAAAQDx/1UAAAAAAAAAAQDs/1UAAAAAAAAAAQBaAFUAAAAAAAAAAQBkAFUAAAAAAAAAAQBfAFUAAAAAAAAAAQBpAFUAAAAAAAAAAQBuAFUAAAAAAAAAAQBzAFUAAAAAAAAAAQB4AFUAAAAAAAAAAQB9AFUAAAAAAAAAAQCCAFUAAAAAAAAAAQCHAFUAAAAAAAAAAQCMAFUAAAAAAAAAAQCRAFUAAAAAAAAAAQCWAFUAAAAAAAAAAQCbAFUAAAAAAAAAAQCgAFUAAAAAAAAAAQClAFUAAAAAAAAAAQA=")
+tile_set = SubResource("TileSet_swfth")
+
+[node name="spawn_up" type="Marker2D" parent="." unique_id=216843408]
+position = Vector2(446, -307)
+
+[node name="Area2D" parent="." unique_id=594172181 instance=ExtResource("4_1slft")]
+position = Vector2(-29, 449)
+
+[node name="CharacterBody2D" parent="." unique_id=335421528 instance=ExtResource("5_se0i8")]
+position = Vector2(445, -598)

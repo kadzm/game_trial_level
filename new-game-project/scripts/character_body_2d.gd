@@ -6,6 +6,7 @@ const SPRINT_SPEED = 600
 const JUMP_VELOCITY = -600.0
 var isAttacking = false
 var isDead = false
+var hasKey = false
 const PROJECTILE_SCENE = preload("res://scenes/projectile.tscn")
 var spawn_offset = 50.0
 signal health_changed(health)
@@ -16,7 +17,17 @@ var health = 100 :
 		health_changed.emit(health)
 
 
+
+func _ready() -> void:
+	var spawn = get_tree().current_scene.get_node_or_null(Global.spawn_point)
+	if spawn:
+		global_position = spawn.global_position
+
+
 func _physics_process(delta: float) -> void:
+	
+	if (health > 100):
+		health = 100
 	
 	var current_speed = SPEED
 	
@@ -119,37 +130,11 @@ func TakeDamage(damage_taken):
 	#I'm gonna define each amount of damage as a different jump height. 
 	health -= damage_taken
 	#velocity.y = JUMP_VELOCITY/1.5
-	if damage_taken == 1:
-		velocity.y = JUMP_VELOCITY*0.3
-	elif damage_taken == 5:
-		velocity.y = JUMP_VELOCITY*0.5
-	elif damage_taken == 10:
-		velocity.y = JUMP_VELOCITY
-	elif damage_taken == 20:
-		velocity.y = JUMP_VELOCITY*1.2
-	elif damage_taken == 30:
-		velocity.y = JUMP_VELOCITY*1.3
-	elif damage_taken == 40:
-		velocity.y = JUMP_VELOCITY*1.5
-	elif damage_taken == 50:
-		velocity.y = JUMP_VELOCITY*2
+	if damage_taken:
+		velocity.y = JUMP_VELOCITY*.8
 	if health <= 0:
 		Die()
 		
-	
-	#Because I want damage to be correlated directly with movement, I need to make a system that will actually encourage damaging yourself intentionally
-	#versus going the platforming bits. Damage amounts done by enemies should not be high, and neither should spikes
-	#Heres a general guide of what I'm thinking
-	#0 damage - If I want to implement a spring or something along those lines, it may be easier to simply reuse this method, but we'll see
-	#1 damage - this will be very high frequency, so we cant make this give too much jump height
-	#5 damage - this will likely be the standard per hit, nothing crazy, maybe a .3x just height
-	#10 damage - 1x getting into meaningful damage here, so we should have a meaningful boost
-	#20 damage - 1.5x jump
-	#30 damage - 2x
-	#40 damage - 4x
-	#50 damage - this will need to be extremely good in order to justify, and likely either at the very beginnning or the very end of a level
-	# probably 5 or 6x.
-	#debating on putting a speed boost on these as well while I'm at it
 	
 func Die():
 	isDead = true
@@ -158,7 +143,12 @@ func Die():
 	await $AnimatedSprite2D.animation_finished
 	#if is_instance_valid(self):
 	tree.reload_current_scene()
-
+	
+func Check_Key():
+	return hasKey
+	
+func Acquire_Key():
+	hasKey = true
 
 func _on_animated_sprite_2d_animation_changed() -> void:
 	pass # Replace with function body.

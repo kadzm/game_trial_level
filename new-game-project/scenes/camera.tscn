@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://bytfd30lb6ybm"]
+
+[ext_resource type="Script" uid="uid://cpsv2o7ukl1jq" path="res://scripts/Camera_Snap.gd" id="1_cvpoc"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vboj3"]
+size = Vector2(1266.75, 797)
+
+[node name="Area2D" type="Area2D" unique_id=594172181]
+script = ExtResource("1_cvpoc")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1980595108]
+position = Vector2(542.5, -316)
+shape = SubResource("RectangleShape2D_vboj3")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=641765364]
+position = Vector2(446, -318)
+zoom = Vector2(0.8, 0.8)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
